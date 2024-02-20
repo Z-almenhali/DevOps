@@ -1,44 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>HTML + CSS</title>
+<html>
+<head>
+    <title>Sahar & Zahar Game</title>
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        animation: colorChange 5s forwards;
-      }
-
-      @keyframes colorChange {
-        from {
-          background-color: white;
-        }
-        to {
-          background-color: black;
-        }
-      }
-
-      h1 {
-        font-size: 1rem;
-        text-align: center;
-        animation: growText 5s forwards;
-      }
-
-      @keyframes growText {
-        from {
-          font-size: 1rem;
-        }
-        to {
-          font-size: 10rem;
-        }
-      }
+        body { font-family: Arial, sans-serif; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .board { border-collapse: collapse; }
+        .board td { width: 100px; height: 100px; border: 1px solid #333; text-align: center; font-size: 2em; cursor: pointer; }
     </style>
-  </head>
-  <body>
-    <h1>This Is Sahar & Zahar Project!!</h1>
-  </body>
+</head>
+<body>
+    <div class="container">
+        <table class="board">
+            <tr>
+                <td id="cell-0" onclick="playMove(0)"></td>
+                <td id="cell-1" onclick="playMove(1)"></td>
+                <td id="cell-2" onclick="playMove(2)"></td>
+            </tr>
+            <tr>
+                <td id="cell-3" onclick="playMove(3)"></td>
+                <td id="cell-4" onclick="playMove(4)"></td>
+                <td id="cell-5" onclick="playMove(5)"></td>
+            </tr>
+            <tr>
+                <td id="cell-6" onclick="playMove(6)"></td>
+                <td id="cell-7" onclick="playMove(7)"></td>
+                <td id="cell-8" onclick="playMove(8)"></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        let currentPlayer = 'X';
+        let cells = ['', '', '', '', '', '', '', '', ''];
+
+        function playMove(index) {
+            if (cells[index] === '') {
+                cells[index] = currentPlayer;
+                document.getElementById('cell-' + index).innerText = currentPlayer;
+                if (checkWin()) {
+                    alert(currentPlayer + ' wins!');
+                    resetGame();
+                    return;
+                }
+                if (checkDraw()) {
+                    alert('It\'s a draw!');
+                    resetGame();
+                    return;
+                }
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            }
+        }
+
+        function checkWin() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            for (let combo of winningCombos) {
+                if (cells[combo[0]] !== '' && cells[combo[0]] === cells[combo[1]] && cells[combo[1]] === cells[combo[2]]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function checkDraw() {
+            return cells.every(cell => cell !== '');
+        }
+
+        function resetGame() {
+            cells = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            document.querySelectorAll('.board td').forEach(cell => cell.innerText = '');
+        }
+    </script>
+</body>
 </html>
